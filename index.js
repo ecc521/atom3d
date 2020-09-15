@@ -13,8 +13,11 @@ Isotopes: Both Cu-63 and Cu-65 are stable.<br>
 Neutrons: Varies, most commonly 34 or 36.<br>
 
 Uses:
-Copper conducts heat and electricity EXTREMELY well (behind only silver), and due to it's reasonable cost, is used heavily in electrical circuits and motors, along with the cheaper, but significantly less conductive, aluminum.<br>
-Copper is also frequently used for jewelry, as well as being (or having been) a component of coined currencies, including that of the United States.<br>
+Copper conducts heat and electricity EXTREMELY well (behind only silver)<br>
+Therefore, due to it's reasonable cost, is used heavily in electrical circuits and motors<br>
+- The cheaper, but significantly less conductive Aluminum is often used as an alternative. <br>
+Copper has been a component of coined currencies, including that of the United States.<br>
+Copper is also frequently used in alloys for jewelry, <br>
 <a style="color: white" href="https://periodictable.com/Properties/A/UniverseAbundance.v.log.html" target="_blank">Abundance Source</a><br>
 `
 
