@@ -50,8 +50,9 @@ var createScene = function () {
 
     // Setup camera
     var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
-    camera.setPosition(new BABYLON.Vector3(-25, 50, -45));
+    camera.setPosition(new BABYLON.Vector3(-35, 40, -45));
     camera.attachControl(canvas, true);
+    window.camera = camera
 
     // Add lights to the scene
     var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
@@ -101,7 +102,7 @@ var createScene = function () {
             electron.randomness = 0.15
             electron.material = new BABYLON.StandardMaterial("electronmaterial", scene);
             electron.material.emissiveColor = new BABYLON.Color3(0, .5, 0.5)
-            electron.material.diffuseTexture = new BABYLON.Texture(createText("Electron", 100, "#008888", "#000000"), scene);
+            electron.material.diffuseTexture = new BABYLON.Texture(createText("Electron", 100, "#00AAAA", "#000000"), scene);
             electron.parent = nucleus;
             electrons.push(electron)
         }
