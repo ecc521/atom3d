@@ -25,7 +25,7 @@ let genCanvas = document.createElement("canvas")
 let ctx = genCanvas.getContext("2d")
 function createText(text = "Electron", fontSize = 10, backgroundColor="#000000", textColor="#FFFFFF", font = "Arial") {
     genCanvas.height = fontSize * 10
-    genCanvas.width = Math.ceil(ctx.measureText(text).width) * 20
+    genCanvas.width = Math.ceil(ctx.measureText(text).width) * 30
     ctx.font = fontSize + "px " + font
     ctx.clearRect(0,0,genCanvas.width,genCanvas.height)
     ctx.fillStyle = backgroundColor
@@ -47,12 +47,12 @@ var createScene = function () {
 
     // Setup camera
     var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
-    camera.setPosition(new BABYLON.Vector3(-20, 50, 0));
+    camera.setPosition(new BABYLON.Vector3(-25, 50, -45));
     camera.attachControl(canvas, true);
 
     // Add lights to the scene
     var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
-    //var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+    var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(-0.8, -1, 0), scene);
 
 
     var nucleus = BABYLON.Mesh.CreateSphere("nucleus", 16, 4, scene);
@@ -216,3 +216,16 @@ toggleInfo.addEventListener("click", function() {
     }
 })
 document.body.appendChild(toggleInfo)
+
+
+
+let togglePairing = document.createElement("button")
+togglePairing.id = "togglePairing"
+togglePairing.innerHTML = "Disable Electron Pairing"
+togglePairing.addEventListener("click", function() {
+    window.electronPairing = !window.electronPairing
+    scene = createScene()
+    if (window.electronPairing) {togglePairing.innerHTML = "Disable Electron Pairing"}
+    else {togglePairing.innerHTML = "Enable Electron Pairing"}
+})
+document.body.appendChild(togglePairing)
