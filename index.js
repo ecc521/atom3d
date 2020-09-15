@@ -46,6 +46,7 @@ window.countForDistance = periodicTable[startIndex].shells
 window.paused = false
 
 var createScene = function () {
+    if (window.paused) {pause.click()}
     var scene = new BABYLON.Scene(engine);
 
     // Setup camera
