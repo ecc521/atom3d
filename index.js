@@ -28,14 +28,16 @@ let genCanvas = document.createElement("canvas")
 let ctx = genCanvas.getContext("2d")
 function createText(text = "Electron", fontSize = 10, backgroundColor="#000000", textColor="#FFFFFF", font = "Arial") {
     genCanvas.height = fontSize * 10
-    genCanvas.width = Math.ceil(ctx.measureText(text).width) * 30
+    let textWidth = Math.ceil(ctx.measureText(text).width)
+    genCanvas.width = textWidth * 30
     ctx.font = fontSize + "px " + font
     ctx.clearRect(0,0,genCanvas.width,genCanvas.height)
     ctx.fillStyle = backgroundColor
     ctx.fillRect(0, 0, genCanvas.width, genCanvas.height)
     ctx.scale(-1,-1)
     ctx.fillStyle = textColor
-    ctx.fillText(text, genCanvas.width / -2, genCanvas.height / -2)
+    ctx.fillText(text, genCanvas.width * -0.85, genCanvas.height * -0.5)
+    ctx.fillText(text, genCanvas.width * -0.35, genCanvas.height * -0.5)
     return genCanvas.toDataURL("img/png")
 }
 
