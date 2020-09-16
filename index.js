@@ -45,7 +45,7 @@ let startIndex = Number(window.location.hash.slice(1))
 //If we don't have an element explicitly set, default to copper.
 if (window.location.hash.length < 2 || !periodicTable[startIndex]) {startIndex = 28}
 
-window.electronPairing = true
+window.electronPairing = false
 window.countForDistance = periodicTable[startIndex].shells
 window.paused = false
 
@@ -148,6 +148,7 @@ var createScene = function () {
             }
             let pairs = noPairs
             //The distance between pairs will be 1/10th the normal difference.
+            //Note: When the normal difference is small, such as sparsely filled outer layers, this does bad.
             for (let i=0;i<pairs;i++) {
                 offsetArray.push(2 * Math.PI * (i/noPairs) + (Math.PI * (0.015/noPairs)) * electronDistance)
             }
@@ -300,12 +301,12 @@ document.body.appendChild(toggleInfo)
 
 let togglePairing = document.createElement("button")
 togglePairing.id = "togglePairing"
-togglePairing.innerHTML = "Disable Electron Pairing"
+togglePairing.innerHTML = "Enable Electron Pairing (Beta)"
 togglePairing.addEventListener("click", function() {
     window.electronPairing = !window.electronPairing
     scene = createScene()
     if (window.electronPairing) {togglePairing.innerHTML = "Disable Electron Pairing"}
-    else {togglePairing.innerHTML = "Enable Electron Pairing"}
+    else {togglePairing.innerHTML = "Enable Electron Pairing (Beta)"}
 })
 document.body.appendChild(togglePairing)
 
