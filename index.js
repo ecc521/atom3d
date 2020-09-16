@@ -46,7 +46,7 @@ let startIndex = Number(window.location.hash.slice(1))
 if (window.location.hash.length < 2 || !periodicTable[startIndex]) {startIndex = 28}
 
 window.electronPairing = false
-window.countForDistance = periodicTable[startIndex].shells
+window.element = periodicTable[startIndex]
 window.paused = false
 
 var createScene = function () {
@@ -63,13 +63,59 @@ var createScene = function () {
     var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
     var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(-0.8, -1, 0), scene);
 
+    let nucleusSize = 5
 
-    var nucleus = BABYLON.Mesh.CreateSphere("nucleus", 16, 4, scene);
+    //Adjust size of nucleus based on element.
+    nucleusSize /= window.periodicTable.length ** 0.33676424447995346
+    nucleusSize *= window.element.number ** 0.33676424447995346
+
+    nucleusSize += 1
+
+    var nucleus = BABYLON.Mesh.CreateSphere("nucleus", 16, nucleusSize, scene);
 	nucleus.position = new BABYLON.Vector3(0, 0, 0);
     var material = new BABYLON.StandardMaterial("nucleusmaterial", scene);
     nucleus.material = material;
+    nucleus.material.alpha = 0.5
     material.diffuseTexture = new BABYLON.Texture(createText("Nucleus", 100, "#884400"), scene);
 
+
+    //Generate particles inside nucleus.
+    let protonTexture = new BABYLON.Texture(createText("Proton", 100, "#AA0000", "#000000"), scene);
+    let neutronTexture = new BABYLON.Texture(createText("Neutron", 100, "#AAAAAA", "#000000"), scene);
+
+    let nucleusParticleSize = 1
+
+    let neutronsAndProtons = [
+        window.element.number,
+        Math.round(window.element.atomic_mass - window.element.number) //Neutron estimation.
+    ]
+    neutronsAndProtons.forEach((value, index) => {
+        texture = index?neutronTexture:protonTexture
+        for (let i=0;i<value;i++) {
+            var particle = BABYLON.Mesh.CreateSphere("particle", 16, nucleusParticleSize, scene);
+            particle.material = new BABYLON.StandardMaterial("particlematerial", scene);
+
+            let reducedNucleusSize = nucleusSize * 0.75 //Speed up selection.
+            let pos = new BABYLON.Vector3()
+            function setPos() {
+                pos.x = (Math.random() * reducedNucleusSize) - reducedNucleusSize/2
+                pos.y = (Math.random() * reducedNucleusSize) - reducedNucleusSize/2
+                pos.z = (Math.random() * reducedNucleusSize) - reducedNucleusSize/2
+
+                let distance = BABYLON.Vector3.Distance(pos, nucleus.position)
+                if (distance + nucleusParticleSize/2 > nucleusSize / 2) {
+                    setPos()
+                }
+                else {
+                    particle.position = pos
+                }
+            }
+            setPos()
+
+            particle.material.diffuseTexture = texture
+            particle.parent = nucleus;
+        }
+    })
 
 
     //Ribbon from https://www.babylonjs-playground.com/#2E9DTS#9, edited to remove curvature.
@@ -123,7 +169,7 @@ var createScene = function () {
 
     let electrons = []
     let electronTexture = new BABYLON.Texture(createText("Electron", 100, "#00AAAA", "#000000"), scene);
-    countForDistance.forEach((value, index) => {
+    window.element.shells.forEach((value, index) => {
         let electronDistance = 3*(index+1) + 2
 
         let offsetArray = []
@@ -136,7 +182,7 @@ var createScene = function () {
         else {
             //TODO: Sublevels.
             let maxForDistance = [2, 8, 18, 32, 32, 32, 32]
-            maxForDistance.length = countForDistance.length
+            maxForDistance.length = window.element.shells.length
             maxForDistance[maxForDistance.length - 1] = Math.min(maxForDistance[maxForDistance.length - 1], 8)
             if (maxForDistance.length > 1) {
                 maxForDistance[maxForDistance.length - 2] = Math.min(maxForDistance[maxForDistance.length - 2], 18)
@@ -179,7 +225,6 @@ var createScene = function () {
             electron.speed = 20/(index+1)**2
             electron.randomness = 0.15
             electron.material = new BABYLON.StandardMaterial("electronmaterial", scene);
-            electron.material.emissiveColor = new BABYLON.Color3(0, .5, 0.5)
             electron.material.diffuseTexture = electronTexture
             electron.parent = nucleus;
             electrons.push(electron)
@@ -247,7 +292,7 @@ selector.addEventListener("change", function() {
     let element = periodicTable[index]
     setInfo(index)
     window.location.hash = index
-    window.countForDistance = element.shells
+    window.element = periodicTable[index]
     scene = createScene()
 })
 
@@ -316,7 +361,7 @@ window.onhashchange = function() {
         let element = periodicTable[index]
         selector.value = index
         setInfo(index)
-        window.countForDistance = element.shells
+        window.element = periodicTable[index]
         scene = createScene()
     }
 }
