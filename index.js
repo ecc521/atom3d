@@ -320,3 +320,16 @@ window.onhashchange = function() {
         scene = createScene()
     }
 }
+
+
+
+
+let sizes = [16,24,32,64,96,160,196]
+sizes.forEach((size) => {
+    let favicon = document.createElement("link")
+    favicon.rel = "shortcut icon"
+    favicon.type = "image/png"
+    favicon.sizes = size + "x" + size
+    favicon.href = `icons/${size}x${size}-oxygen-2D.png`
+    document.head.appendChild(favicon)
+})
