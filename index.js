@@ -71,6 +71,7 @@ var createScene = function () {
     material.diffuseTexture = new BABYLON.Texture(createText("Nucleus", 100, "#884400"), scene);
 
     let electrons = []
+    let electronTexture = new BABYLON.Texture(createText("Electron", 100, "#00AAAA", "#000000"), scene);
     countForDistance.forEach((value, index) => {
 
         let offsetArray = []
@@ -107,7 +108,7 @@ var createScene = function () {
             electron.randomness = 0.15
             electron.material = new BABYLON.StandardMaterial("electronmaterial", scene);
             electron.material.emissiveColor = new BABYLON.Color3(0, .5, 0.5)
-            electron.material.diffuseTexture = new BABYLON.Texture(createText("Electron", 100, "#00AAAA", "#000000"), scene);
+            electron.material.diffuseTexture = electronTexture
             electron.parent = nucleus;
             electrons.push(electron)
         }
