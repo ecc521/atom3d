@@ -70,6 +70,57 @@ var createScene = function () {
     nucleus.material = material;
     material.diffuseTexture = new BABYLON.Texture(createText("Nucleus", 100, "#884400"), scene);
 
+
+
+    //Ribbon from https://www.babylonjs-playground.com/#2E9DTS#9, edited to remove curvature.
+
+    // material
+    var mat = new BABYLON.StandardMaterial("mat1", scene);
+    mat.alpha = 0.8;
+    mat.diffuseColor = new BABYLON.Color3(0.5, 0.5, 1.0);
+    mat.emissiveColor = new BABYLON.Color3.Black();
+    mat.backFaceCulling = false;
+
+    var createRibbon = function(mesh, path1, path2) {
+        var positions = [];
+        var indices = [];
+        var normals = [];
+
+        // process Arrays into positions & indices
+        var i = 0;
+        while (i < path1.length-2 && i < path2.length-2) {
+            positions.push(path1[i], path1[i+1], path1[i+2]);
+            positions.push(path2[i], path2[i+1], path2[i+2]);
+            i += 3;
+        }
+
+        for (var i = 0; i < positions.length/3-2; i++) {
+            if (i%2 == 0) {
+                indices.push(i, i+1, i+2);
+            }
+            else {
+                indices.push(i+2, i+1, i);
+            }
+        }
+
+        BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+
+        mesh.setVerticesData(BABYLON.VertexBuffer.PositionKind, positions, false);
+        mesh.setVerticesData(BABYLON.VertexBuffer.NormalKind, normals, false);
+        mesh.setIndices(indices);
+    };
+
+
+    // tubular ribbon
+    path1 = [];
+    path2 = [];
+    for (var i = 0; i <= 60; i++) {
+        path1.push(Math.cos(Math.PI * 2 *i/60), 1, Math.sin(Math.PI * 2 *i/60));
+        path2.push(Math.cos(Math.PI * 2 *i/60), 0, Math.sin(Math.PI * 2 *i/60));
+    }
+
+
+
     let electrons = []
     let electronTexture = new BABYLON.Texture(createText("Electron", 100, "#00AAAA", "#000000"), scene);
     countForDistance.forEach((value, index) => {
@@ -100,9 +151,28 @@ var createScene = function () {
             offsetArray = offsetArray.reverse()
         }
 
+
+        let electronDistance = 3*(index+1) + 2
+
+        var mesh4 = new BABYLON.Mesh("mesh4", scene);
+        mesh4.material = mat;
+        let height = 0.08
+        let radius = electronDistance
+        mesh4.position.y -= height/2
+        createRibbon(mesh4, path1.map((value, index) => {
+            if (index % 3 === 1) {return value * height}
+            else {return value * radius}
+        }), path2.map((value, index) => {
+            if (index % 3 === 1) {
+                return value
+            }
+            else {return value * radius}
+        }));
+
+
         for (let i=0;i<value;i++) {
             var electron = BABYLON.Mesh.CreateSphere("electron", 16, 0.7, scene);
-            electron.distance = 3*(index+1) + 2
+            electron.distance = electronDistance
             electron.offset = offsetArray.pop()
             electron.speed = 20/(index+1)**2
             electron.randomness = 0.15
