@@ -41,7 +41,9 @@ function createText(text = "Electron", fontSize = 10, backgroundColor="#000000",
     return genCanvas.toDataURL("img/png")
 }
 
-let startIndex = 28
+let startIndex = Number(window.location.hash.slice(1))
+//If we don't have an element explicitly set, default to copper.
+if (window.location.hash.length < 2 || !periodicTable[startIndex]) {startIndex = 28}
 
 window.electronPairing = true
 window.countForDistance = periodicTable[startIndex].shells
@@ -122,6 +124,8 @@ var createScene = function () {
 		    electron.position = new BABYLON.Vector3(electron.distance * Math.sin(electron.offset+alpha*electron.speed) + Math.random() * electron.randomness, electron.parent.position.y + Math.random() * electron.randomness, electron.distance * Math.cos(electron.offset+alpha*electron.speed) + Math.random() * electron.randomness);
         })
 
+        nucleus.rotate(new BABYLON.Vector3(0, 1, 0), Math.PI / 1000, BABYLON.Space.LOCAL);
+
         alpha += 0.005;
     };
 
@@ -139,11 +143,6 @@ engine.runRenderLoop(function () { // Register a render loop to repeatedly rende
 window.addEventListener("resize", function () { // Watch for browser/canvas resize events
     engine.resize();
 });
-
-
-
-
-
 
 
 
@@ -174,6 +173,7 @@ selector.addEventListener("change", function() {
     let index = Number(selector.value)
     let element = periodicTable[index]
     setInfo(index)
+    window.location.hash = index
     window.countForDistance = element.shells
     scene = createScene()
 })
@@ -236,3 +236,13 @@ togglePairing.addEventListener("click", function() {
     else {togglePairing.innerHTML = "Enable Electron Pairing"}
 })
 document.body.appendChild(togglePairing)
+
+window.onhashchange = function() {
+    let index = Number(window.location.hash.slice(1))
+    if (periodicTable[index]) {
+        let element = periodicTable[index]
+        setInfo(index)
+        window.countForDistance = element.shells
+        scene = createScene()
+    }
+}
