@@ -333,3 +333,10 @@ sizes.forEach((size) => {
     favicon.href = `icons/${size}x${size}-oxygen-2D.png`
     document.head.appendChild(favicon)
 })
+
+
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+        navigator.serviceWorker.register('sw.js');
+    });
+}
