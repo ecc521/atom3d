@@ -241,6 +241,7 @@ window.onhashchange = function() {
     let index = Number(window.location.hash.slice(1))
     if (periodicTable[index]) {
         let element = periodicTable[index]
+        selector.value = index
         setInfo(index)
         window.countForDistance = element.shells
         scene = createScene()
