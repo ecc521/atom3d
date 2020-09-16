@@ -124,6 +124,7 @@ var createScene = function () {
     let electrons = []
     let electronTexture = new BABYLON.Texture(createText("Electron", 100, "#00AAAA", "#000000"), scene);
     countForDistance.forEach((value, index) => {
+        let electronDistance = 3*(index+1) + 2
 
         let offsetArray = []
 
@@ -133,6 +134,7 @@ var createScene = function () {
             }
         }
         else {
+            //TODO: Sublevels.
             let maxForDistance = [2, 8, 18, 32, 32, 32, 32]
             maxForDistance.length = countForDistance.length
             maxForDistance[maxForDistance.length - 1] = Math.min(maxForDistance[maxForDistance.length - 1], 8)
@@ -145,14 +147,13 @@ var createScene = function () {
                 offsetArray.push(2 * Math.PI * (i/noPairs))
             }
             let pairs = noPairs
+            //The distance between pairs will be 1/10th the normal difference.
             for (let i=0;i<pairs;i++) {
-                offsetArray.push(2 * Math.PI * (i/noPairs) + (Math.PI * 0.05))
+                offsetArray.push(2 * Math.PI * (i/noPairs) + (Math.PI * (0.015/noPairs)) * electronDistance)
             }
             offsetArray = offsetArray.reverse()
         }
 
-
-        let electronDistance = 3*(index+1) + 2
 
         var mesh4 = new BABYLON.Mesh("mesh4", scene);
         mesh4.material = mat;
